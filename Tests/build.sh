@@ -15,4 +15,4 @@ $MCS -out:Tests.dll -platform:x64 -target:library -reference:$SCRIPTROOT/../pack
 MONO=$MONO_BIN/mono
 
 NUNIT_CONSOLE=`readlink --canonicalize $SCRIPTROOT/../tools/NUnit-2.6.3/bin/nunit-console.exe`
-$MONO --runtime=v4.0 $NUNIT_CONSOLE Tests.dll
+MONO_REGISTRY_PATH=$SCRIPTROOT/registry $MONO --runtime=v4.0 $NUNIT_CONSOLE Tests.dll
