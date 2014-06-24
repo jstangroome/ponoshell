@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Management.Automation;
 using Microsoft.Win32;
 using NUnit.Framework;
@@ -34,10 +35,22 @@ namespace Tests
         }
 
         [Test]
-        public void Should_parse() 
+        public void Should_parse_a_simple_command_without_exceptions() 
         {
             ProofOfConcept.FakeKernel32.Initialize();
             Assert.IsNotNull(ScriptBlock.Create("Get-Date"));
+        }
+
+        [Test]
+        public void Should_return_current_time_from_GetDate()
+        {
+            using (var shell = PowerShell.Create ())
+            {
+                shell.AddCommand ("Get-Date");
+                var result = (DateTime)shell.Invoke().Single().BaseObject;
+                var delta = DateTime.Now.Subtract(result);
+                Assert.IsTrue(delta.TotalSeconds < 60);
+            }
         }
     }
 }
