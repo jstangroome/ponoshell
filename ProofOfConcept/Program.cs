@@ -7,26 +7,59 @@ using Microsoft.Win32;
 
 namespace ProofOfConcept
 {
-	[StructLayout(LayoutKind.Sequential)]
-	struct SYSTEM_INFO
+	public class FakeKernel32() 
 	{
-		public int dwOemId;
-		public int dwPageSize;
-		public IntPtr lpMinAppAddr;
-		public IntPtr lpMaxAppAddr;
-		public IntPtr dwActiveProcessorMask;
-		public int dwNumberOfProcessors;
-		public int dwProcessorType;
-		public int dwAllocationGranularity;
-		public short wProcessorLevel;
-		public short wProcessorRevision;
-	}
+		[StructLayout(LayoutKind.Sequential)]
+		struct SYSTEM_INFO
+		{
+			public int dwOemId;
+			public int dwPageSize;
+			public IntPtr lpMinAppAddr;
+			public IntPtr lpMaxAppAddr;
+			public IntPtr dwActiveProcessorMask;
+			public int dwNumberOfProcessors;
+			public int dwProcessorType;
+			public int dwAllocationGranularity;
+			public short wProcessorLevel;
+			public short wProcessorRevision;
+		}
 
-	class MainClass
-	{
-		[DllImport("kernel32.dll", EntryPoint = "GetSystemInfo")]
+		[StructLayout(LayoutKind.Sequential)]
+		struct MEMORY_BASIC_INFORMATION
+		{
+		    public UIntPtr BaseAddress;
+		    public UIntPtr AllocationBase;
+		    public uint AllocationProtect;
+		    public UIntPtr RegionSize;
+		    public uint State;
+		    public uint Protect;
+		    public uint Type;
+		}
+
+		[DllImport("kernel32", EntryPoint = "GetSystemInfo")]
 		static extern void GetSystemInfo(out SYSTEM_INFO lpSystemInfo);
 
+		[DllImport("kernel32")]
+		static extern UIntPtr VirtualQuery(UIntPtr lpAddress, ref MEMORY_BASIC_INFORMATION lpBuffer, UIntPtr dwLength);
+
+		const uint PAGE_SIZE = 0; // dummy
+
+		public static void Initialize()
+		{
+			Debug.WriteLine(string.Format("IntPtr.Size: {0}", IntPtr.Size));
+		
+			var info = new SYSTEM_INFO();
+			GetSystemInfo(out info);
+
+		    var lpBuffer = new MEMORY_BASIC_INFORMATION();
+		    VirtualQuery(UIntPtr.Zero, ref lpBuffer, new UIntPtr((ulong)Marshal.SizeOf(lpBuffer)));
+
+		}
+
+	}
+
+	class MainClass	
+	{
 		private static void CreateRegistryKeys()
 		{
 			using (var softwareKey = Registry.LocalMachine.OpenSubKey (@"SOFTWARE", writable: true))
@@ -38,9 +71,7 @@ namespace ProofOfConcept
 
 		private static void	TestFakeKernel32()
 		{
-			Console.WriteLine(string.Format("IntPtr.Size: {0}", IntPtr.Size));
-			var info = new SYSTEM_INFO();
-			GetSystemInfo(out info);
+			FakeKernel32.Initialize();
 		}
 
 		public static void Main (string[] args)

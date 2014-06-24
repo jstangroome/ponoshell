@@ -1,3 +1,4 @@
 <values>
 	<value name="PowerShellVersion" type="string">2.0</value>
+	<value name="ApplicationBase" type="string">.</value>
 </values>

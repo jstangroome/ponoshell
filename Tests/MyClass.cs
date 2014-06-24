@@ -1,4 +1,5 @@
 using System;
+using System.Management.Automation;
 using Microsoft.Win32;
 using NUnit.Framework;
 
@@ -22,6 +23,21 @@ namespace Tests
                 Assert.AreEqual("2.0", psKey.GetValue ("PowerShellVersion"));
                 //TODO psKey.GetValue ("ApplicationBase");
             }
+        }
+        
+        [Test]
+        public void Should_find_PowerShell_ApplicationBase_in_registry()
+        {
+            using (var psKey = Registry.LocalMachine.OpenSubKey (@"SOFTWARE\Microsoft\PowerShell\1\PowerShellEngine")) {
+                Assert.IsFalse(string.IsNullOrEmpty((string)psKey.GetValue ("ApplicationBase")));
+            }
+        }
+
+        [Test]
+        public void Should_parse() 
+        {
+            ProofOfConcept.FakeKernel32.Initialize();
+            Assert.IsNotNull(ScriptBlock.Create("Get-Date"));
         }
     }
 }

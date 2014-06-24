@@ -5,4 +5,5 @@ pushd `dirname $0` > /dev/null
 SCRIPTROOT=`pwd`
 popd > /dev/null
 
-gcc -o libkernel32.so -fPIC -shared $SCRIPTROOT/kernel32.c 
+mkdir $SCRIPTROOT/bin/ > /dev/null
+gcc -o $SCRIPTROOT/bin/libkernel32.so -fPIC -shared $SCRIPTROOT/kernel32.c 

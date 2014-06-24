@@ -11,7 +11,7 @@ XBUILD=$MONO_BIN/xbuild
 MONO=$MONO_BIN/mono
 
 cp --verbose $SCRIPTROOT/../libkernel32/bin/libkernel32.so bin/
-$XBUILD $SCRIPTROOT/Tests.csproj || exit 1
+$XBUILD $SCRIPTROOT/ProofOfConcept.csproj
 
-NUNIT_CONSOLE=`readlink --canonicalize $SCRIPTROOT/../tools/NUnit-2.6.3/bin/nunit-console.exe`
-MONO_REGISTRY_PATH=$SCRIPTROOT/registry $MONO --runtime=v4.0 $NUNIT_CONSOLE $SCRIPTROOT/bin/Tests.dll
+#MONO_LOG_LEVEL=debug 
+MONO_REGISTRY_PATH=$SCRIPTROOT/../Tests/registry $MONO --runtime=v4.0 $SCRIPTROOT/bin/ProofOfConcept.exe
