@@ -22,7 +22,6 @@ namespace Tests
         {
             using (var psKey = Registry.LocalMachine.OpenSubKey (@"SOFTWARE\Microsoft\PowerShell\1\PowerShellEngine")) {
                 Assert.AreEqual("2.0", psKey.GetValue ("PowerShellVersion"));
-                //TODO psKey.GetValue ("ApplicationBase");
             }
         }
         
