@@ -7,7 +7,7 @@ using Microsoft.Win32;
 
 namespace ProofOfConcept
 {
-	public class FakeKernel32() 
+	public class FakeKernel32 
 	{
 		[StructLayout(LayoutKind.Sequential)]
 		struct SYSTEM_INFO
